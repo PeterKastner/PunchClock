@@ -6,7 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.pkapps.punchclock.MainViewModel
+import com.pkapps.punchclock.presentation.MainViewModel
 import com.pkapps.punchclock.presentation.MainScreen
 
 @Composable
