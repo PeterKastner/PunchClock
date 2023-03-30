@@ -1,4 +1,4 @@
-package com.pkapps.punchclock.data
+package com.pkapps.punchclock.data.local
 
 import androidx.room.Dao
 import androidx.room.Delete
