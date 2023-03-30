@@ -3,7 +3,7 @@ package com.pkapps.punchclock.di
 import android.app.Application
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.pkapps.punchclock.data.PunchClockDatabase
+import com.pkapps.punchclock.data.local.PunchClockDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,5 +40,9 @@ object AppModule {
             .fallbackToDestructiveMigration()
             .build()
     }
+
+
+    @Provides
+    fun provideWorkTimeDao(database: PunchClockDatabase) = database.workTimeDao
 
 }
