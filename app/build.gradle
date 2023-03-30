@@ -1,8 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -28,23 +28,36 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     buildFeatures {
         compose true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion '1.4.4'
     }
+
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
+    }
+
+    kapt { // Allow references to generated code, see https://developer.android.com/training/dependency-injection/hilt-android#groovy
+        correctErrorTypes true
+    }
+
+    hilt { // see https://youtrack.jetbrains.com/issue/KT-46940/Kapt-reports-a-warning-The-following-options-were-not-recognized-by-any-processor...#focus=Comments-27-5211169.0-0
+        enableAggregatingTask = true // and also see https://dagger.dev/hilt/gradle-setup#aggregating-task
     }
 }
 
@@ -74,11 +87,11 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-test-manifest"
 
     // Dagger + Hilt for dependency injection
-    implementation "com.google.dagger:hilt-android:2.44"
-    kapt "com.google.dagger:hilt-compiler:2.44"
-}
+    implementation "com.google.dagger:hilt-android:2.45"
+    kapt "com.google.dagger:hilt-compiler:2.45"
 
-// Allow references to generated code, see https://developer.android.com/training/dependency-injection/hilt-android#groovy
-kapt {
-    correctErrorTypes true
+    // Room for using sqlite as database
+    def room_version = "2.5.1"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version" // to use Kotlin annotation processing tool (kapt)
 }
