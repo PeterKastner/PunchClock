@@ -23,4 +23,8 @@ class WorkTimeRepositoryImpl @Inject constructor(
     override suspend fun deleteWorkTime(workTime: WorkTime) {
         dao.deleteWorkTime(workTime)
     }
+
+    override suspend fun deleteAllWorkTimes() {
+        dao.deleteAllWorkTimes()
+    }
 }

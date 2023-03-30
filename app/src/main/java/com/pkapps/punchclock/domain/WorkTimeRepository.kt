@@ -11,4 +11,6 @@ interface WorkTimeRepository {
 
     suspend fun deleteWorkTime(workTime: WorkTime)
 
+    suspend fun deleteAllWorkTimes()
+
 }

@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 @Entity(tableName = "work_time")
 data class WorkTime(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long = 0L,
     val start: LocalDateTime,
     val end: LocalDateTime,
     val pause: Duration,

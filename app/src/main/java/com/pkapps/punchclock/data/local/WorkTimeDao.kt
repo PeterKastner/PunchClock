@@ -18,4 +18,7 @@ interface WorkTimeDao {
     @Delete
     suspend fun deleteWorkTime(workTime: WorkTime)
 
+    @Query("DELETE FROM work_time")
+    suspend fun deleteAllWorkTimes()
+
 }
