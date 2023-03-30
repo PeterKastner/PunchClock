@@ -82,6 +82,7 @@ dependencies {
     implementation "androidx.compose.ui:ui"
     implementation "androidx.compose.ui:ui-tooling-preview"
     implementation 'androidx.compose.material3:material3:1.1.0-beta01' // uses specific version for time and date picker composable functions
+    implementation("androidx.compose.material3:material3-window-size-class:1.1.0-beta01") // windows size artifact to elp make the app adaptive
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.4.0" // specific version to avoid failed to resolve gradle error
 
