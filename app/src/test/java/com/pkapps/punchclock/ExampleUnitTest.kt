@@ -1,4 +1,4 @@
-package com.example.punchclock
+package com.pkapps.punchclock
 
 import org.junit.Test
 

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.punchclock'
+    namespace 'com.pkapps.punchclock'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.punchclock"
+        applicationId "com.pkapps.punchclock"
         minSdk 24
         targetSdk 33
         versionCode 1

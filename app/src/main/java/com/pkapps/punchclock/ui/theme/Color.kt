@@ -1,4 +1,4 @@
-package com.example.punchclock.ui.theme
+package com.pkapps.punchclock.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
