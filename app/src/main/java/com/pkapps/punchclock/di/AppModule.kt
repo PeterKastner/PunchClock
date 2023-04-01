@@ -3,9 +3,9 @@ package com.pkapps.punchclock.di
 import android.app.Application
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.pkapps.punchclock.data.WorkTimeRepositoryImpl
-import com.pkapps.punchclock.data.local.PunchClockDatabase
-import com.pkapps.punchclock.domain.WorkTimeRepository
+import com.pkapps.punchclock.feature_time_tracking.data.WorkTimeRepositoryImpl
+import com.pkapps.punchclock.feature_time_tracking.data.local.PunchClockDatabase
+import com.pkapps.punchclock.feature_time_tracking.domain.WorkTimeRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,8 +1,8 @@
-package com.pkapps.punchclock.data
+package com.pkapps.punchclock.feature_time_tracking.data
 
-import com.pkapps.punchclock.data.local.PunchClockDatabase
-import com.pkapps.punchclock.data.local.WorkTime
-import com.pkapps.punchclock.domain.WorkTimeRepository
+import com.pkapps.punchclock.feature_time_tracking.data.local.PunchClockDatabase
+import com.pkapps.punchclock.feature_time_tracking.data.local.WorkTime
+import com.pkapps.punchclock.feature_time_tracking.domain.WorkTimeRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

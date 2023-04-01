@@ -1,6 +1,6 @@
-package com.pkapps.punchclock.domain
+package com.pkapps.punchclock.feature_time_tracking.domain
 
-import com.pkapps.punchclock.data.local.WorkTime
+import com.pkapps.punchclock.feature_time_tracking.data.local.WorkTime
 import kotlinx.coroutines.flow.Flow
 
 interface WorkTimeRepository {

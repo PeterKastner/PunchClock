@@ -6,8 +6,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.pkapps.punchclock.presentation.MainViewModel
-import com.pkapps.punchclock.presentation.MainScreen
+import com.pkapps.punchclock.feature_time_tracking.presentation.MainViewModel
+import com.pkapps.punchclock.feature_time_tracking.presentation.MainScreen
 
 @Composable
 fun PunchClockAppNavHost(

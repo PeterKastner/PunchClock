@@ -1,4 +1,4 @@
-package com.pkapps.punchclock.presentation
+package com.pkapps.punchclock.feature_time_tracking.presentation
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pkapps.punchclock.data.local.WorkTime
-import com.pkapps.punchclock.domain.WorkTimeRepository
+import com.pkapps.punchclock.feature_time_tracking.data.local.WorkTime
+import com.pkapps.punchclock.feature_time_tracking.domain.WorkTimeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

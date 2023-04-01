@@ -1,4 +1,4 @@
-package com.pkapps.punchclock;
+package com.pkapps.punchclock.presentation;
 
 import androidx.lifecycle.ViewModel;
 

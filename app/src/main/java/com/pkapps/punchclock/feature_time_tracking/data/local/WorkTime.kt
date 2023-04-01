@@ -1,4 +1,4 @@
-package com.pkapps.punchclock.data.local
+package com.pkapps.punchclock.feature_time_tracking.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
