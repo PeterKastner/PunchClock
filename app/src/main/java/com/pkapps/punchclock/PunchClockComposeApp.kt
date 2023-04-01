@@ -7,8 +7,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.pkapps.punchclock.navigation.PunchClockAppNavHost
-import com.pkapps.punchclock.ui.theme.PunchClockTheme
+import com.pkapps.punchclock.core.navigation.PunchClockAppNavHost
+import com.pkapps.punchclock.core.ui.theme.PunchClockTheme
 
 @Composable
 fun PunchClockComposeApp(

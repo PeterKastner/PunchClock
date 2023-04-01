@@ -10,7 +10,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
-import com.pkapps.punchclock.ui.theme.PunchClockTheme
+import com.pkapps.punchclock.core.ui.theme.PunchClockTheme
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 

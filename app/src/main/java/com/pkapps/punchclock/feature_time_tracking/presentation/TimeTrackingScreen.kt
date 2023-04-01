@@ -20,11 +20,15 @@ fun MainScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .padding(16.dp)
         ) {
 
             Row(
-                horizontalArrangement = Arrangement.SpaceAround
-            ){
+                horizontalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
                 Button(
                     onClick = { onEvent(TimeTrackingEvent.StartTracking) },
                     content = { Text(text = "Start") }

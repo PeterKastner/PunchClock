@@ -1,4 +1,4 @@
-package com.pkapps.punchclock.navigation
+package com.pkapps.punchclock.core.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState

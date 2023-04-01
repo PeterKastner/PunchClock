@@ -1,4 +1,4 @@
-package com.pkapps.punchclock.ui.theme
+package com.pkapps.punchclock.core.ui.theme
 
 import android.app.Activity
 import android.os.Build
