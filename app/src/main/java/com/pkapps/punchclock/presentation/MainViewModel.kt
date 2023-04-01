@@ -1,6 +1,9 @@
 package com.pkapps.punchclock.presentation
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pkapps.punchclock.data.local.WorkTime
@@ -10,7 +13,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.Duration
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -21,32 +23,34 @@ class MainViewModel @Inject constructor(
 
     val workTimes = mutableStateListOf<WorkTime>()
 
+    var workTime by mutableStateOf(WorkTime())
+
     init {
         workTimeRepository.getWorkTimes().onEach { workTimesList ->
-            Timber.d("work times = $workTimesList")
+            Timber.i("work times = $workTimesList")
             workTimes.clear()
             workTimesList.forEach {
                 workTimes.add(it)
             }
         }.launchIn(viewModelScope)
+
+        workTimeRepository.getWorkTimeWithEndTimeOfNullOrNull().onEach {
+            Timber.i("work time with end equal to null = $it")
+            it?.let { workTime = it }
+        }.launchIn(viewModelScope)
     }
 
-    fun startWorkTimeTracking() {
+    fun startWorkTimeTracking() = viewModelScope.launch {
 
-        val workTime = WorkTime(
-            start = LocalDateTime.now(),
-            end = LocalDateTime.MAX,
-            pause = Duration.ZERO,
-            comment = ""
-        )
+        workTime = workTime.copy(start = LocalDateTime.now())
 
-        viewModelScope.launch {
-            workTimeRepository.upsertWorkTime(workTime = workTime)
-        }
+        workTimeRepository.upsertWorkTime(workTime)
     }
 
-    fun stopWorkTimeTracking() {
+    fun stopWorkTimeTracking() = viewModelScope.launch {
+        workTime = workTime.copy(end = LocalDateTime.now())
 
+        workTimeRepository.upsertWorkTime(workTime)
     }
 
     fun clearWorkTimes() = viewModelScope.launch {
