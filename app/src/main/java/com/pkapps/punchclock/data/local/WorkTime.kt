@@ -4,13 +4,14 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.Duration
 import java.time.LocalDateTime
+import java.util.UUID
 
 @Entity(tableName = "work_time")
 data class WorkTime(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
-    val start: LocalDateTime,
-    val end: LocalDateTime,
-    val pause: Duration,
-    val comment: String,
+    @PrimaryKey
+    val id: UUID = UUID.randomUUID(),
+    val start: LocalDateTime = LocalDateTime.now(),
+    val end: LocalDateTime? = null,
+    val pause: Duration = Duration.ZERO,
+    val comment: String = "",
 )

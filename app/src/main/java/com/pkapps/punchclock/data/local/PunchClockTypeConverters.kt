@@ -11,14 +11,14 @@ object PunchClockTypeConverters {
 
     @TypeConverter
     @JvmStatic
-    fun toLocalDateTime(value: String): LocalDateTime {
-        return formatter.parse(value, LocalDateTime::from)
+    fun toLocalDateTime(value: String?): LocalDateTime? {
+        return value?.let { formatter.parse(value, LocalDateTime::from) }
     }
 
     @TypeConverter
     @JvmStatic
-    fun fromLocalDateTime(date: LocalDateTime): String {
-        return date.format(formatter)
+    fun fromLocalDateTime(date: LocalDateTime?): String? {
+        return date?.format(formatter)
     }
 
     @TypeConverter

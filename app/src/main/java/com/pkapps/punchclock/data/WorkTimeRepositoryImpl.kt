@@ -16,8 +16,16 @@ class WorkTimeRepositoryImpl @Inject constructor(
         return dao.getWorkTimes()
     }
 
+    override fun getWorkTimeWithEndTimeOfNullOrNull(): Flow<WorkTime?> {
+        return dao.getWorkTimeWithEndTimeOfNull()
+    }
+
     override suspend fun upsertWorkTime(workTime: WorkTime) {
         dao.upsertWorkTime(workTime)
+    }
+
+    override suspend fun upsertWorkTimes(vararg workTimes: WorkTime) {
+        dao.upsertWorkTimes(*workTimes)
     }
 
     override suspend fun deleteWorkTime(workTime: WorkTime) {

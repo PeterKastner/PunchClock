@@ -7,7 +7,11 @@ interface WorkTimeRepository {
 
     fun getWorkTimes(): Flow<List<WorkTime>>
 
+    fun getWorkTimeWithEndTimeOfNullOrNull(): Flow<WorkTime?>
+
     suspend fun upsertWorkTime(workTime: WorkTime)
+
+    suspend fun upsertWorkTimes(vararg workTimes: WorkTime)
 
     suspend fun deleteWorkTime(workTime: WorkTime)
 
