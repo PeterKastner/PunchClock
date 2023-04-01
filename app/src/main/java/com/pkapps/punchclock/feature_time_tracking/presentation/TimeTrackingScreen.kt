@@ -7,14 +7,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun MainScreen(
-    viewModel: MainViewModel = hiltViewModel()
+    state: TimeTrackingState,
+    onEvent: (TimeTrackingEvent) -> Unit
 ) {
-
-    val workTimes = viewModel.workTimes
 
     Scaffold { innerPadding ->
 
@@ -24,24 +22,29 @@ fun MainScreen(
                 .padding(innerPadding)
         ) {
 
-            Row {
-                Button(onClick = viewModel::startWorkTimeTracking) {
-                    Text(text = "Start")
-                }
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround
+            ){
+                Button(
+                    onClick = { onEvent(TimeTrackingEvent.StartTracking) },
+                    content = { Text(text = "Start") }
+                )
 
-                Button(onClick = viewModel::stopWorkTimeTracking) {
-                    Text(text = "Stop")
-                }
+                Button(
+                    onClick = { onEvent(TimeTrackingEvent.StopTracking) },
+                    content = { Text(text = "Stop") }
+                )
 
-                Button(onClick = viewModel::clearWorkTimes) {
-                    Text(text = "Clear")
-                }
+                Button(
+                    onClick = { onEvent(TimeTrackingEvent.DeleteTrackedTimes) },
+                    content = { Text(text = "Clear") }
+                )
             }
 
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                workTimes.forEach {
+                state.workTimes.forEach {
                     Text(text = it.toString())
                 }
             }
