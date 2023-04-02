@@ -60,6 +60,7 @@ class TimeTrackingViewModel @Inject constructor(
 
     private fun clearWorkTimes() = viewModelScope.launch {
         workTimeRepository.deleteAllWorkTimes()
+        _state.update { it.copy(currentWorkTime = WorkTime()) }
     }
 
 }

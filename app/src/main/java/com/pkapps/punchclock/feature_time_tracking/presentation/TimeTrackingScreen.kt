@@ -45,16 +45,19 @@ fun MainScreen(
             ) {
                 Button(
                     onClick = { onEvent(TimeTrackingEvent.StartTracking) },
+                    enabled = !showCurrentWorkTime,
                     content = { Text(text = "Start") }
                 )
 
                 Button(
                     onClick = { onEvent(TimeTrackingEvent.StopTracking) },
+                    enabled = state.currentWorkTime.hasStart(),
                     content = { Text(text = "Stop") }
                 )
 
                 Button(
                     onClick = { onEvent(TimeTrackingEvent.DeleteTrackedTimes) },
+                    enabled = state.workTimes.isNotEmpty(),
                     content = { Text(text = "Clear") }
                 )
             }
