@@ -2,6 +2,7 @@ package com.pkapps.punchclock.feature_time_tracking.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pkapps.punchclock.feature_time_tracking.data.local.WorkTime
 import com.pkapps.punchclock.feature_time_tracking.domain.WorkTimeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -53,6 +54,8 @@ class TimeTrackingViewModel @Inject constructor(
         val workTime = _state.value.currentWorkTime.copy(end = LocalDateTime.now())
 
         workTimeRepository.upsertWorkTime(workTime)
+
+        _state.update { it.copy(currentWorkTime = WorkTime()) }
     }
 
     private fun clearWorkTimes() = viewModelScope.launch {

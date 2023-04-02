@@ -10,8 +10,13 @@ import java.util.UUID
 data class WorkTime(
     @PrimaryKey
     val id: UUID = UUID.randomUUID(),
-    val start: LocalDateTime = LocalDateTime.now(),
+    val start: LocalDateTime? = null,
     val end: LocalDateTime? = null,
     val pause: Duration = Duration.ZERO,
     val comment: String = "",
-)
+) {
+    fun hasStart() = this.start != null
+
+    fun hasEnd() = this.end != null
+
+}
