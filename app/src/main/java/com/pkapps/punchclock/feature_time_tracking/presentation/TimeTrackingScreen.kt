@@ -123,7 +123,7 @@ fun TimeTrackingScreen(
                                 ContextCompat.startActivity(context, shareIntent, null)
                             }
                         },
-                        enabled = state.workTimes.isNotEmpty(),
+                        enabled = workTimesToDisplay.isNotEmpty(),
                         content = { Text("Share") })
                 }
             }
