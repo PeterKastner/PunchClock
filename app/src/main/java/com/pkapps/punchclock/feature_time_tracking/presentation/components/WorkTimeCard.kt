@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -89,6 +90,34 @@ fun WorkTimeCard(
                     style = style
                 )
             }
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = modifier
+                    .padding(vertical = 8.dp)
+                    .fillMaxWidth()
+            ) {
+
+                val duration = Duration.between(workTime.start, workTime.end)
+                val hours = duration.toHours()
+                val minutes = duration.toMinutesPart()
+                val inHoursMinutes = String.format("%01d:%02d", hours, minutes)
+
+                val color = when {
+                    duration <= Duration.ofHours(8) -> Color.Green
+                    duration <= Duration.ofHours(9) -> Color.Green.copy(alpha = 0.7f)
+                    else -> colorScheme.error
+                }
+
+                Text(
+                    text = "Delta",
+                    style = style
+                )
+                Text(
+                    text = inHoursMinutes,
+                    color = color,
+                    style = style
+                )
+            }
         }
     }
 }
@@ -127,9 +156,23 @@ class WorkTimeProvider : PreviewParameterProvider<WorkTime> {
         WorkTime(
             id = UUID.randomUUID(),
             start = LocalDateTime.now(),
-            end = LocalDateTime.now() + Duration.ofHours(8),
+            end = LocalDateTime.now() + Duration.ofHours(8).plus(Duration.ofMinutes(26)),
             pause = Duration.ZERO,
             comment = ""
-        )
+        ),
+        WorkTime(
+            id = UUID.randomUUID(),
+            start = LocalDateTime.now(),
+            end = LocalDateTime.now() + Duration.ofHours(9).plus(Duration.ofMinutes(12)),
+            pause = Duration.ZERO,
+            comment = ""
+        ),
+        WorkTime(
+            id = UUID.randomUUID(),
+            start = LocalDateTime.now(),
+            end = LocalDateTime.now() + Duration.ofHours(13).plus(Duration.ofMinutes(20)),
+            pause = Duration.ZERO,
+            comment = ""
+        ),
     ).asSequence()
 }
