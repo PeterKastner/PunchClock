@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.Duration
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 @Entity(tableName = "work_time")
 data class WorkTime(
@@ -18,5 +18,10 @@ data class WorkTime(
     fun hasStart() = this.start != null
 
     fun hasEnd() = this.end != null
+
+    fun grossDeltaOrNull(): Duration? =
+        if (hasStart() && hasEnd()) Duration.between(this.start, this.end) else null
+
+    fun netDeltaOrNull(): Duration? = grossDeltaOrNull()?.minus(pause)
 
 }
