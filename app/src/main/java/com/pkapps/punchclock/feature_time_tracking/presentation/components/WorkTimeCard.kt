@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -20,6 +21,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.pkapps.punchclock.core.ui.theme.PunchClockTheme
+import com.pkapps.punchclock.core.util.inHoursMinutes
 import com.pkapps.punchclock.core.util.toReadableTimeAsString
 import com.pkapps.punchclock.feature_time_tracking.data.local.WorkTime
 import java.time.Duration
@@ -34,6 +36,10 @@ fun WorkTimeCard(
     elevation: CardElevation = CardDefaults.cardElevation(),
     border: BorderStroke? = null,
 ) {
+
+    val showGrossDelta = remember { workTime.grossDeltaOrNull() != null }
+    val showPause = remember { workTime.pause > Duration.ZERO }
+    val showNetDelta = remember { workTime.netDeltaOrNull() != null }
 
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -83,40 +89,80 @@ fun WorkTimeCard(
 
                 Text(
                     text = "End",
-                    style = style
+                    style = style,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = workTime.end?.toReadableTimeAsString() ?: "",
                     style = style
                 )
             }
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = modifier
-                    .padding(vertical = 8.dp)
-                    .fillMaxWidth()
-            ) {
 
-                val duration = Duration.between(workTime.start, workTime.end)
-                val hours = duration.toHours()
-                val minutes = duration.toMinutesPart()
-                val inHoursMinutes = String.format("%01d:%02d", hours, minutes)
+            if (showGrossDelta) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = modifier
+                        .padding(vertical = 8.dp)
+                        .fillMaxWidth()
+                ) {
 
-                val color = when {
-                    duration <= Duration.ofHours(8) -> Color.Green
-                    duration <= Duration.ofHours(9) -> Color.Green.copy(alpha = 0.7f)
-                    else -> colorScheme.error
+                    Text(
+                        text = "Gross",
+                        style = style
+                    )
+                    Text(
+                        text = workTime.grossDeltaOrNull()?.inHoursMinutes() ?: "",
+                        style = style
+                    )
                 }
+            }
 
-                Text(
-                    text = "Delta",
-                    style = style
-                )
-                Text(
-                    text = inHoursMinutes,
-                    color = color,
-                    style = style
-                )
+            if (showPause) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = modifier
+                        .padding(vertical = 8.dp)
+                        .fillMaxWidth()
+                ) {
+
+                    Text(
+                        text = "Pause",
+                        style = style
+                    )
+                    Text(
+                        text = workTime.pause.inHoursMinutes(),
+                        style = style
+                    )
+                }
+            }
+
+            if (showNetDelta) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = modifier
+                        .padding(vertical = 8.dp)
+                        .fillMaxWidth()
+                ) {
+
+                    val color = workTime.netDeltaOrNull()?.let {
+                        when {
+                            it <= Duration.ofHours(8) -> Color.Green
+                            it <= Duration.ofHours(9) -> Color.Green.copy(alpha = 0.6f)
+                            else -> colorScheme.error
+                        }
+                    }
+
+                    Text(
+                        text = "Net",
+                        style = style
+                    )
+                    Text(
+                        text = workTime.netDeltaOrNull()?.inHoursMinutes() ?: "",
+                        style = style,
+                        color = color ?: Color.Unspecified
+                    )
+                }
             }
         }
     }
@@ -157,21 +203,7 @@ class WorkTimeProvider : PreviewParameterProvider<WorkTime> {
             id = UUID.randomUUID(),
             start = LocalDateTime.now(),
             end = LocalDateTime.now() + Duration.ofHours(8).plus(Duration.ofMinutes(26)),
-            pause = Duration.ZERO,
-            comment = ""
-        ),
-        WorkTime(
-            id = UUID.randomUUID(),
-            start = LocalDateTime.now(),
-            end = LocalDateTime.now() + Duration.ofHours(9).plus(Duration.ofMinutes(12)),
-            pause = Duration.ZERO,
-            comment = ""
-        ),
-        WorkTime(
-            id = UUID.randomUUID(),
-            start = LocalDateTime.now(),
-            end = LocalDateTime.now() + Duration.ofHours(13).plus(Duration.ofMinutes(20)),
-            pause = Duration.ZERO,
+            pause = Duration.ofMinutes(52),
             comment = ""
         ),
     ).asSequence()
