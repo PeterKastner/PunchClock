@@ -5,8 +5,8 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 
-fun LocalDateTime.toReadableTimeAsString(): String {
-    val pattern = "E dd.MM.yyy HH:mm"
+fun LocalDateTime.toReadableTimeAsString(pattern: String = "E dd.MM.yyy HH:mm"): String {
+
     val formatter = DateTimeFormatter.ofPattern(pattern).withLocale(Locale.getDefault())
 
     val truncated = this.truncatedTo(ChronoUnit.MINUTES)
