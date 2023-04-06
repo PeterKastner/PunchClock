@@ -18,8 +18,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DateHeader(
-    dateString: String,
+fun HeaderItem(
+    text: String,
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.End,
     shape: Shape = shapes.extraSmall,
@@ -39,7 +39,7 @@ fun DateHeader(
     ) {
 
         Text(
-            text = dateString,
+            text = text,
             style = style,
             textAlign = textAlign,
             modifier = modifier.padding(vertical = 8.dp, horizontal = 16.dp)

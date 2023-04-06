@@ -121,4 +121,7 @@ dependencies {
     // CSV
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.0")
 
+    // RevealSwipe for compose
+    implementation("de.charlex.compose:revealswipe:1.1.0")
+
 }

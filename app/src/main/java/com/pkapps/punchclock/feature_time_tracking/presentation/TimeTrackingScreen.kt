@@ -21,13 +21,16 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
-import com.pkapps.punchclock.feature_time_tracking.presentation.components.DateHeader
+import com.pkapps.punchclock.core.util.inHoursMinutes
+import com.pkapps.punchclock.feature_time_tracking.presentation.components.HeaderItem
 import com.pkapps.punchclock.feature_time_tracking.presentation.components.WorkTimeCard
 import kotlinx.coroutines.launch
 import java.io.File
+import java.time.Duration
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
+import java.time.temporal.WeekFields
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -41,7 +44,14 @@ fun TimeTrackingScreen(
             .sortedByDescending { it.end }
     }
 
-    val groupedWorkTimes = workTimesToDisplay.groupBy { it.start!!.toLocalDate() }
+    val workTimesGroupedByStartDate = workTimesToDisplay.groupBy { it.start!!.toLocalDate() }
+
+    val workTimesGroupedByCalendarWeek = workTimesToDisplay.groupBy {
+
+        val weekFields = WeekFields.ISO
+
+        it.start!!.get(weekFields.weekOfYear())
+    }
 
     val showCurrentWorkTime = remember(
         state.currentWorkTime.start,
@@ -98,7 +108,13 @@ fun TimeTrackingScreen(
                                 csvWriter().open(csvFile) {
                                     writeRow(listOf("id", "start", "end", "pause", "comment"))
                                     workTimesToDisplay.forEach {
-                                        writeRow(it.id, it.start!!.truncatedTo(ChronoUnit.MINUTES), it.end!!.truncatedTo(ChronoUnit.MINUTES), it.pause, it.comment)
+                                        writeRow(
+                                            it.id,
+                                            it.start!!.truncatedTo(ChronoUnit.MINUTES),
+                                            it.end!!.truncatedTo(ChronoUnit.MINUTES),
+                                            it.pause,
+                                            it.comment
+                                        )
                                     }
                                 }
 
@@ -145,35 +161,46 @@ fun TimeTrackingScreen(
 
             item { Divider() }
 
-            groupedWorkTimes.forEach { (date, workTimes) ->
+            workTimesGroupedByCalendarWeek.forEach { (week, workTimes) ->
+
+                val sumOfNetDeltas =
+                    workTimes.map { it.netDeltaOrNull() }.fold(Duration.ZERO, Duration::plus)
 
                 stickyHeader {
-                    DateHeader(
-                        dateString = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
-                            .format(date).toString(),
-                        border = BorderStroke(
-                            width = 2.dp,
-                            color = colorScheme.primary
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    HeaderItem(text = "Week $week\t\t${sumOfNetDeltas.inHoursMinutes()}")
                 }
 
-                items(
-                    items = workTimes,
-                    key = { it.id },
-                    contentType = { it }
-                ) {
-                    Box(
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    ) {
-                        WorkTimeCard(workTime = it)
+                workTimesGroupedByStartDate.forEach { (date, workTimes) ->
+
+                    val fullStyleDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
+
+                    stickyHeader {
+                        HeaderItem(
+                            text = fullStyleDate.format(date).toString(),
+                            border = BorderStroke(
+                                width = 2.dp,
+                                color = colorScheme.primary
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
-                }
 
+                    items(
+                        items = workTimes,
+                        key = { it.id },
+                        contentType = { it }
+                    ) {
+                        Box(
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        ) {
+                            WorkTimeCard(workTime = it)
+                        }
+                    }
+
+
+                }
 
             }
-
         }
 
     }
