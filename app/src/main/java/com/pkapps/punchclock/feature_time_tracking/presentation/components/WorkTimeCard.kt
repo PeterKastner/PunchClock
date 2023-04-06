@@ -164,6 +164,23 @@ fun WorkTimeCard(
                     )
                 }
             }
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = modifier
+                    .padding(vertical = 8.dp)
+                    .fillMaxWidth()
+            ) {
+
+                Text(
+                    text = "Comment",
+                    style = style
+                )
+                Text(
+                    text = workTime.comment,
+                    style = style,
+                )
+            }
         }
     }
 }
