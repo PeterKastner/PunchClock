@@ -50,7 +50,8 @@ fun WorkTimeCard(
     border: BorderStroke? = null,
     //onClick: (WorkTime) -> Unit = { },
     onDeleteClick: (WorkTime) -> Unit = { },
-    onCommentSubmit: (String) -> Unit = { }
+    onCommentSubmit: (String) -> Unit = { },
+    onPauseSubmit: (Duration) -> Unit = { },
 ) {
 
     val showNetDelta = remember { workTime.netDeltaOrNull() != null }
@@ -62,6 +63,16 @@ fun WorkTimeCard(
             text = workTime.comment,
             closeSelection = { showCommentDialog = false },
             onSubmit = onCommentSubmit
+        )
+    }
+
+    var showDurationDialog by remember { mutableStateOf(false) }
+
+    if (showDurationDialog) {
+        DurationDialog(
+            duration = workTime.pause,
+            closeSelection = { showDurationDialog = false },
+            onSubmit = onPauseSubmit
         )
     }
 
@@ -185,6 +196,13 @@ fun WorkTimeCard(
                     modifier = modifier
                         .padding(vertical = 8.dp)
                         .fillMaxWidth()
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onLongPress = {
+                                    showDurationDialog = true
+                                }
+                            )
+                        }
                 ) {
 
                     Text(

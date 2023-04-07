@@ -220,6 +220,10 @@ fun TimeTrackingScreen(
                         onCommentSubmit = { newComment ->
                             Timber.i("comment = '$newComment'")
                             onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(comment = newComment)))
+                        },
+                        onPauseSubmit = { newDuration ->
+                            Timber.i("duration = '$newDuration'")
+                            onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(pause = newDuration)))
                         }
                     )
                 }
@@ -266,6 +270,10 @@ fun TimeTrackingScreen(
                                 onCommentSubmit = { newComment ->
                                     Timber.i("comment = '$newComment'")
                                     onEvent(UpdateWorkTime(workTime = it.copy(comment = newComment)))
+                                },
+                                onPauseSubmit = { newDuration ->
+                                    Timber.i("duration = '$newDuration'")
+                                    onEvent(UpdateWorkTime(workTime = it.copy(pause = newDuration)))
                                 }
                             )
                         }
