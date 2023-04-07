@@ -5,6 +5,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -51,13 +53,13 @@ fun WorkTimeCard(
     enableSwipe: Boolean = true,
     border: BorderStroke? = null,
     //onClick: (WorkTime) -> Unit = { },
-    onDeleteClick: (WorkTime) -> Unit = { },
-    onCommentSubmit: (comment: String) -> Unit = { },
-    onPauseSubmit: (pause: Duration) -> Unit = { },
-    onStartTimeSubmit: (start: LocalTime) -> Unit = { },
-    onEndTimeSubmit: (end: LocalTime) -> Unit = { },
-    onStartDateSubmit: (start: LocalDate) -> Unit = { },
-    onEndDateSubmit: (end: LocalDate) -> Unit = { }
+    onDeleteClick: (WorkTime) -> Unit,
+    onCommentSubmit: (comment: String) -> Unit,
+    onPauseSubmit: (pause: Duration) -> Unit,
+    onStartTimeSubmit: (start: LocalTime) -> Unit,
+    onEndTimeSubmit: (end: LocalTime) -> Unit,
+    onStartDateSubmit: (start: LocalDate) -> Unit,
+    onEndDateSubmit: (end: LocalDate) -> Unit
 ) {
 
     val showNetDelta = remember { workTime.netDeltaOrNull() != null }
@@ -82,23 +84,43 @@ fun WorkTimeCard(
         )
     }
 
-    var showInputStartTimeDialog by remember { mutableStateOf(false) }
+    var showStartTimeDialog by remember { mutableStateOf(false) }
 
-    if (showInputStartTimeDialog && workTime.hasStart()) {
+    if (showStartTimeDialog && workTime.hasStart()) {
         TimeDialog(
             localTime = workTime.start!!.toLocalTime(),
-            close = { showInputStartTimeDialog = false },
+            close = { showStartTimeDialog = false },
             onSubmit = onStartTimeSubmit
         )
     }
 
-    var showInputEndTimeDialog by remember { mutableStateOf(false) }
+    var showEndTimeDialog by remember { mutableStateOf(false) }
 
-    if (showInputEndTimeDialog && workTime.hasEnd()) {
+    if (showEndTimeDialog && workTime.hasEnd()) {
         TimeDialog(
             localTime = workTime.end!!.toLocalTime(),
-            close = { showInputEndTimeDialog = false },
+            close = { showEndTimeDialog = false },
             onSubmit = onEndTimeSubmit
+        )
+    }
+
+    var showStartDateDialog by remember { mutableStateOf(false) }
+
+    if (showStartDateDialog && workTime.hasStart()) {
+        DateDialog(
+            localDate = workTime.start!!.toLocalDate(),
+            close = { showStartDateDialog = false },
+            onSubmit = onStartDateSubmit
+        )
+    }
+
+    var showEndDateDialog by remember { mutableStateOf(false) }
+
+    if (showEndDateDialog && workTime.hasEnd()) {
+        DateDialog(
+            localDate = workTime.end!!.toLocalDate(),
+            close = { showEndDateDialog = false },
+            onSubmit = onEndDateSubmit
         )
     }
 
@@ -126,14 +148,14 @@ fun WorkTimeCard(
         state = revealState,
         enableSwipe = enableSwipe,
         hiddenContentStart = {
-            androidx.compose.material.IconButton(
+            IconButton(
                 onClick = {
                     onDeleteClick(workTime)
                     scope.launch { revealState.reset() }
                     performHapticFeedback()
                 }
             ) {
-                androidx.compose.material.Icon(
+                Icon(
                     modifier = Modifier.padding(horizontal = 26.dp),
                     imageVector = Icons.Default.Delete,
                     tint = MaterialTheme.colors.onError,
@@ -187,7 +209,8 @@ fun WorkTimeCard(
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onLongPress = {
-                                    showInputStartTimeDialog = true
+                                    showStartTimeDialog = true
+                                    showStartDateDialog = true
                                 }
                             )
                         }
@@ -215,7 +238,8 @@ fun WorkTimeCard(
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onLongPress = {
-                                    showInputEndTimeDialog = true
+                                    showEndTimeDialog = true
+                                    showEndDateDialog = true
                                 }
                             )
                         }
@@ -339,6 +363,13 @@ fun WorkTimeCardPreview(
                     shape = shapes.medium,
                     elevation = CardDefaults.elevatedCardElevation(),
                     border = BorderStroke(width = 2.dp, color = colorScheme.primary),
+                    onDeleteClick = {},
+                    onCommentSubmit = {},
+                    onPauseSubmit = {},
+                    onStartTimeSubmit = {},
+                    onEndTimeSubmit = {},
+                    onStartDateSubmit = {},
+                    onEndDateSubmit = {},
                 )
             }
         }

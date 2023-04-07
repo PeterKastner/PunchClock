@@ -224,6 +224,22 @@ fun TimeTrackingScreen(
                         onPauseSubmit = { newDuration ->
                             Timber.i("duration = '$newDuration'")
                             onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(pause = newDuration)))
+                        },
+                        onStartTimeSubmit = { newStartTime ->
+                            Timber.i("start time = '$newStartTime'")
+                            onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(start = state.currentWorkTime.start?.with(newStartTime))))
+                        },
+                        onEndTimeSubmit = { newEndTime ->
+                            Timber.i("end time = '$newEndTime'")
+                            onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(end = state.currentWorkTime.end?.with(newEndTime))))
+                        },
+                        onStartDateSubmit = { newStartDate ->
+                            Timber.i("start date = '$newStartDate'")
+                            onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(start = state.currentWorkTime.start?.with(newStartDate))))
+                        },
+                        onEndDateSubmit = { newEndDate ->
+                            Timber.i("end date = '$newEndDate'")
+                            onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(start = state.currentWorkTime.start?.with(newEndDate))))
                         }
                     )
                 }
@@ -282,6 +298,14 @@ fun TimeTrackingScreen(
                                 onEndTimeSubmit = { newEndTime ->
                                     Timber.i("end time = '$newEndTime'")
                                     onEvent(UpdateWorkTime(workTime = it.copy(end = it.end?.with(newEndTime))))
+                                },
+                                onStartDateSubmit = { newStartDate ->
+                                    Timber.i("start date = '$newStartDate'")
+                                    onEvent(UpdateWorkTime(workTime = it.copy(start = it.start?.with(newStartDate))))
+                                },
+                                onEndDateSubmit = { newEndDate ->
+                                    Timber.i("end date = '$newEndDate'")
+                                    onEvent(UpdateWorkTime(workTime = it.copy(start = it.start?.with(newEndDate))))
                                 }
                             )
                         }
