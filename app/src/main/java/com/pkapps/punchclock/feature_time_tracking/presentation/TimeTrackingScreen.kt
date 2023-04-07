@@ -218,7 +218,7 @@ fun TimeTrackingScreen(
                         border = BorderStroke(width = 4.dp, color = colorScheme.secondary),
                         onDeleteClick = { onEvent(DeleteWorkTime(it)) },
                         onCommentSubmit = { newComment ->
-                            Timber.i("onCommentTextChangeSubmit: comment = '$newComment'")
+                            Timber.i("comment = '$newComment'")
                             onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(comment = newComment)))
                         }
                     )
@@ -264,7 +264,7 @@ fun TimeTrackingScreen(
                                 workTime = it,
                                 onDeleteClick = { onEvent(DeleteWorkTime(it)) },
                                 onCommentSubmit = { newComment ->
-                                    Timber.i("onCommentTextChangeSubmit: comment = '$newComment'")
+                                    Timber.i("comment = '$newComment'")
                                     onEvent(UpdateWorkTime(workTime = it.copy(comment = newComment)))
                                 }
                             )

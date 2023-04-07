@@ -25,11 +25,11 @@ fun CommentDialog(
                 icon = IconSource(Icons.Filled.Notes)
             ),
             text = text,
-            validationListener = { value ->
-                if (value.isNullOrBlank()) ValidationResult.Invalid("Comment must not be blank.")
-                else ValidationResult.Valid
-            },
-            required = true,
+//            validationListener = { value ->
+//                if (value.isNullOrBlank()) ValidationResult.Invalid("Comment must not be blank.")
+//                else ValidationResult.Valid
+//            },
+            required = false,
             key = "Input"
         )
     )
