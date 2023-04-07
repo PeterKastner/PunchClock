@@ -9,4 +9,5 @@ sealed interface TimeTrackingEvent {
     data class UndoDeleteWorkTimes(val workTimes: List<WorkTime>) : TimeTrackingEvent
     data class DeleteWorkTime(val workTime: WorkTime) : TimeTrackingEvent
     data class UndoDeleteWorkTime(val workTime: WorkTime) : TimeTrackingEvent
+    data class UpdateWorkTime(val workTime: WorkTime) : TimeTrackingEvent
 }

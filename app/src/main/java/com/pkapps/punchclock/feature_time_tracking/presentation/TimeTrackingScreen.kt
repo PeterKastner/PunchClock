@@ -39,7 +39,7 @@ import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
 import java.time.temporal.WeekFields
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TimeTrackingScreen(
     viewModel: TimeTrackingViewModel,
@@ -216,7 +216,11 @@ fun TimeTrackingScreen(
                         workTime = state.currentWorkTime,
                         elevation = CardDefaults.outlinedCardElevation(),
                         border = BorderStroke(width = 4.dp, color = colorScheme.secondary),
-                        onDeleteClick = { onEvent(DeleteWorkTime(it)) }
+                        onDeleteClick = { onEvent(DeleteWorkTime(it)) },
+                        onCommentTextChangeSubmit = { newComment ->
+                            Timber.i("onCommentTextChangeSubmit: comment = '$newComment'")
+                            onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(comment = newComment)))
+                        }
                     )
                 }
 

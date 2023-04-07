@@ -32,6 +32,7 @@ class TimeTrackingViewModel @Inject constructor(
         when (event) {
             TimeTrackingEvent.StartTracking -> startWorkTimeTracking()
             TimeTrackingEvent.StopTracking -> stopWorkTimeTracking()
+            is TimeTrackingEvent.UpdateWorkTime -> updateWorkTime(workTime = event.workTime)
             is TimeTrackingEvent.DeleteWorkTime -> deleteWorkTime(workTime = event.workTime)
             is TimeTrackingEvent.UndoDeleteWorkTime -> undoDeleteWorkTime(workTime = event.workTime)
             is TimeTrackingEvent.DeleteWorkTimes -> deleteWorkTimes(workTimes = event.workTimes)
@@ -63,6 +64,12 @@ class TimeTrackingViewModel @Inject constructor(
         workTimeRepository.upsertWorkTime(workTime)
 
         _state.update { it.copy(currentWorkTime = WorkTime()) }
+    }
+
+    private fun updateWorkTime(workTime: WorkTime) = viewModelScope.launch {
+        workTimeRepository.upsertWorkTime(workTime)
+
+        if (workTime == _state.value.currentWorkTime) _state.update { it.copy(currentWorkTime = workTime) }
     }
 
     private fun deleteWorkTime(workTime: WorkTime) = viewModelScope.launch {

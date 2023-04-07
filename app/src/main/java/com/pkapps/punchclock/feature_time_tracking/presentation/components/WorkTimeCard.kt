@@ -2,6 +2,7 @@ package com.pkapps.punchclock.feature_time_tracking.presentation.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -11,14 +12,12 @@ import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -51,9 +50,20 @@ fun WorkTimeCard(
     border: BorderStroke? = null,
     //onClick: (WorkTime) -> Unit = { },
     onDeleteClick: (WorkTime) -> Unit = { },
+    onCommentTextChangeSubmit: (String) -> Unit = { }
 ) {
 
     val showNetDelta = remember { workTime.netDeltaOrNull() != null }
+
+    var showCommentDialog by remember { mutableStateOf(false) }
+
+    if (showCommentDialog) {
+        CommentDialog(
+            text = workTime.comment,
+            closeSelection = { showCommentDialog = false },
+            onSubmit = onCommentTextChangeSubmit
+        )
+    }
 
     val hapticFeedback = LocalHapticFeedback.current
     fun performHapticFeedback() =
@@ -220,6 +230,13 @@ fun WorkTimeCard(
                     modifier = modifier
                         .padding(vertical = 8.dp)
                         .fillMaxWidth()
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onLongPress = {
+                                    showCommentDialog = true
+                                }
+                            )
+                        }
                 ) {
 
                     Text(
@@ -236,6 +253,7 @@ fun WorkTimeCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(name = "light preview", showBackground = true, showSystemUi = false)
 @Preview(name = "dark preview", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
