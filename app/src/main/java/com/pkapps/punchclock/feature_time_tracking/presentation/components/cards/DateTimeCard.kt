@@ -45,10 +45,8 @@ fun DateTimeCard(
     localDateTime: LocalDateTime?,
     shape: Shape = CardDefaults.elevatedShape,
     colors: CardColors = CardDefaults.elevatedCardColors(),
-    elevation: CardElevation = CardDefaults.elevatedCardElevation(
-        defaultElevation = 16.dp
-    ),
-    dateFormatStyle: FormatStyle = FormatStyle.FULL,
+    elevation: CardElevation = CardDefaults.elevatedCardElevation(16.dp),
+    dateFormatStyle: FormatStyle = FormatStyle.MEDIUM,
     timeFormatStyle: FormatStyle = FormatStyle.SHORT,
     locale: Locale = Locale.getDefault(),
     onDateClick: () -> Unit,

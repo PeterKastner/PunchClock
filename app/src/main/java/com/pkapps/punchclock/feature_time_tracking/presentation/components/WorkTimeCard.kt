@@ -35,6 +35,7 @@ import com.pkapps.punchclock.core.ui.theme.PunchClockTheme
 import com.pkapps.punchclock.core.util.inHoursMinutes
 import com.pkapps.punchclock.core.util.toReadableTimeAsString
 import com.pkapps.punchclock.feature_time_tracking.data.local.WorkTime
+import com.pkapps.punchclock.feature_time_tracking.presentation.components.cards.DateTimeCard
 import de.charlex.compose.*
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -201,6 +202,14 @@ fun WorkTimeCard(
                     .fillMaxWidth()
             ) {
                 // start
+                DateTimeCard(
+                    title = "Start",
+                    localDateTime = workTime.start,
+                    onDateClick = { showStartDateDialog = true },
+                    onTimeClick = { showStartTimeDialog = true },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = modifier
@@ -228,6 +237,8 @@ fun WorkTimeCard(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
+
+
                 }
                 // end
                 Row(
