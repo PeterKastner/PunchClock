@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.pkapps.punchclock.feature_time_tracking.data.local.WorkTime
 import com.pkapps.punchclock.feature_time_tracking.domain.WorkTimeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -24,11 +25,17 @@ class TimeTrackingViewModel @Inject constructor(
         state.copy(workTimes = workTimes)
     }
 
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
+
     fun onEvent(event: TimeTrackingEvent) {
         when (event) {
             TimeTrackingEvent.StartTracking -> startWorkTimeTracking()
             TimeTrackingEvent.StopTracking -> stopWorkTimeTracking()
-            TimeTrackingEvent.DeleteTrackedTimes -> clearWorkTimes()
+            is TimeTrackingEvent.DeleteWorkTime -> deleteWorkTime(workTime = event.workTime)
+            is TimeTrackingEvent.UndoDeleteWorkTime -> undoDeleteWorkTime(workTime = event.workTime)
+            is TimeTrackingEvent.DeleteWorkTimes -> deleteWorkTimes(workTimes = event.workTimes)
+            is TimeTrackingEvent.UndoDeleteWorkTimes -> undoDeleteWorkTimes(workTimes = event.workTimes)
         }
     }
 
@@ -58,9 +65,36 @@ class TimeTrackingViewModel @Inject constructor(
         _state.update { it.copy(currentWorkTime = WorkTime()) }
     }
 
-    private fun clearWorkTimes() = viewModelScope.launch {
-        workTimeRepository.deleteAllWorkTimes()
-        _state.update { it.copy(currentWorkTime = WorkTime()) }
+    private fun deleteWorkTime(workTime: WorkTime) = viewModelScope.launch {
+        workTimeRepository.deleteWorkTime(workTime)
+
+        if (workTime == _state.value.currentWorkTime) _state.update { it.copy(currentWorkTime = WorkTime()) }
+
+        _uiEvent.send(
+            UiEvent.ShowDeletedWorkTimeMessage(
+                message = "Zeit gelöscht.",
+                workTime = workTime
+            )
+        )
     }
+
+    private fun undoDeleteWorkTime(workTime: WorkTime) = viewModelScope.launch {
+        workTimeRepository.upsertWorkTime(workTime)
+    }
+
+    private fun deleteWorkTimes(workTimes: List<WorkTime>) = viewModelScope.launch {
+        workTimeRepository.deleteWorkTimes(workTimes)
+        _uiEvent.send(
+            UiEvent.ShowDeletedWorkTimesMessage(
+                message = "Alle Zeiten gelöscht.",
+                workTimes = workTimes.filter { it.hasEnd() && it.hasStart() }
+            )
+        )
+    }
+
+    private fun undoDeleteWorkTimes(workTimes: List<WorkTime>) = viewModelScope.launch {
+        workTimeRepository.upsertWorkTimes(workTimes)
+    }
+
 
 }

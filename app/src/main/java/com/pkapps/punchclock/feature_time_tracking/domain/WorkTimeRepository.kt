@@ -11,9 +11,11 @@ interface WorkTimeRepository {
 
     suspend fun upsertWorkTime(workTime: WorkTime)
 
-    suspend fun upsertWorkTimes(vararg workTimes: WorkTime)
+    suspend fun upsertWorkTimes(workTimes: List<WorkTime>)
 
     suspend fun deleteWorkTime(workTime: WorkTime)
+
+    suspend fun deleteWorkTimes(workTimes: List<WorkTime>)
 
     suspend fun deleteAllWorkTimes()
 

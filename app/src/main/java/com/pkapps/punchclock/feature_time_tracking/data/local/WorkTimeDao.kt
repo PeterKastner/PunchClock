@@ -24,6 +24,9 @@ interface WorkTimeDao {
     @Delete
     suspend fun deleteWorkTime(workTime: WorkTime)
 
+    @Delete
+    suspend fun deleteWorkTimes(vararg workTimes: WorkTime)
+
     @Query("DELETE FROM work_time")
     suspend fun deleteAllWorkTimes()
 

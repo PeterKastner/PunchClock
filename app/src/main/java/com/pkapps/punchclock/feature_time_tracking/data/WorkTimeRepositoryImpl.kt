@@ -24,12 +24,16 @@ class WorkTimeRepositoryImpl @Inject constructor(
         dao.upsertWorkTime(workTime)
     }
 
-    override suspend fun upsertWorkTimes(vararg workTimes: WorkTime) {
-        dao.upsertWorkTimes(*workTimes)
+    override suspend fun upsertWorkTimes(workTimes: List<WorkTime>) {
+        dao.upsertWorkTimes(*workTimes.toTypedArray())
     }
 
     override suspend fun deleteWorkTime(workTime: WorkTime) {
         dao.deleteWorkTime(workTime)
+    }
+
+    override suspend fun deleteWorkTimes(workTimes: List<WorkTime>) {
+        dao.deleteWorkTimes(*workTimes.toTypedArray())
     }
 
     override suspend fun deleteAllWorkTimes() {

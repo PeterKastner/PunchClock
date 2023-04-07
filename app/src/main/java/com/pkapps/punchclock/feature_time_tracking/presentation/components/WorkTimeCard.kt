@@ -47,6 +47,7 @@ fun WorkTimeCard(
     modifier: Modifier = Modifier,
     shape: Shape = shapes.medium,
     elevation: CardElevation = CardDefaults.cardElevation(),
+    enableSwipe: Boolean = true,
     border: BorderStroke? = null,
     //onClick: (WorkTime) -> Unit = { },
     onDeleteClick: (WorkTime) -> Unit = { },
@@ -79,6 +80,7 @@ fun WorkTimeCard(
     RevealSwipe(
         directions = setOf(RevealDirection.StartToEnd),
         state = revealState,
+        enableSwipe = enableSwipe,
         hiddenContentStart = {
             androidx.compose.material.IconButton(
                 onClick = {

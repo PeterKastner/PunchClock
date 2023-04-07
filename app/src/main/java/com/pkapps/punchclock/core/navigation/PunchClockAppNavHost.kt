@@ -1,16 +1,13 @@
 package com.pkapps.punchclock.core.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.pkapps.punchclock.feature_time_tracking.presentation.TimeTrackingViewModel
 import com.pkapps.punchclock.feature_time_tracking.presentation.TimeTrackingScreen
-import com.pkapps.punchclock.feature_time_tracking.presentation.TimeTrackingState
+import com.pkapps.punchclock.feature_time_tracking.presentation.TimeTrackingViewModel
 
 @Composable
 fun PunchClockAppNavHost(
@@ -26,9 +23,11 @@ fun PunchClockAppNavHost(
         composable(route = Screens.Main.route) {
 
             val viewModel = hiltViewModel<TimeTrackingViewModel>()
-            val state by viewModel.state.collectAsState(TimeTrackingState())
-
-            TimeTrackingScreen(state = state, onEvent = viewModel::onEvent)
+            
+            TimeTrackingScreen(
+                viewModel = viewModel,
+                onEvent = viewModel::onEvent
+            )
         }
     }
 

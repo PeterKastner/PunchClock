@@ -12,19 +12,26 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.SnackbarResult.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
+import com.pkapps.punchclock.R
 import com.pkapps.punchclock.core.util.inHoursMinutes
+import com.pkapps.punchclock.feature_time_tracking.presentation.TimeTrackingEvent.*
 import com.pkapps.punchclock.feature_time_tracking.presentation.components.HeaderItem
 import com.pkapps.punchclock.feature_time_tracking.presentation.components.WorkTimeCard
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.File
 import java.time.Duration
 import java.time.format.DateTimeFormatter
@@ -35,9 +42,11 @@ import java.time.temporal.WeekFields
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TimeTrackingScreen(
-    state: TimeTrackingState,
+    viewModel: TimeTrackingViewModel,
     onEvent: (TimeTrackingEvent) -> Unit
 ) {
+
+    val state by viewModel.state.collectAsState(initial = TimeTrackingState())
 
     val workTimesToDisplay = remember(state.workTimes) {
         state.workTimes.filter { it.hasEnd() && it.hasStart() }
@@ -63,7 +72,60 @@ fun TimeTrackingScreen(
 
     val scope = rememberCoroutineScope()
 
-    Scaffold { innerPadding ->
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    val uiEvent = remember(viewModel.uiEvent, lifecycleOwner) {
+        viewModel.uiEvent.flowWithLifecycle(
+            lifecycleOwner.lifecycle,
+            Lifecycle.State.STARTED
+        )
+    }
+
+    val actionLabel = stringResource(R.string.undo)
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        uiEvent.collectLatest { event ->
+            Timber.i("uiEvent = '$event'")
+            when (event) {
+                is UiEvent.ShowDeletedWorkTimeMessage -> {
+                    val snackbarResult = snackbarHostState.showSnackbar(
+                        message = event.message,
+                        duration = SnackbarDuration.Indefinite,
+                        withDismissAction = true,
+                        actionLabel = actionLabel
+                    )
+
+                    when (snackbarResult) {
+                        Dismissed -> Timber.d("Snackbar dismissed")
+                        ActionPerformed -> onEvent(UndoDeleteWorkTime(event.workTime))
+                    }
+                }
+                is UiEvent.ShowDeletedWorkTimesMessage -> {
+                    val snackbarResult = snackbarHostState.showSnackbar(
+                        message = event.message,
+                        duration = SnackbarDuration.Indefinite,
+                        withDismissAction = true,
+                        actionLabel = actionLabel
+                    )
+
+                    when (snackbarResult) {
+                        Dismissed -> Timber.d("Snackbar dismissed")
+                        ActionPerformed -> {
+                            Timber.d("orders = ${event.workTimes}")
+                            onEvent(UndoDeleteWorkTimes(event.workTimes))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { innerPadding ->
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -81,20 +143,20 @@ fun TimeTrackingScreen(
                         .padding(16.dp)
                 ) {
                     Button(
-                        onClick = { onEvent(TimeTrackingEvent.StartTracking) },
+                        onClick = { onEvent(StartTracking) },
                         enabled = !showCurrentWorkTime,
                         content = { Text(text = "Start") }
                     )
 
                     Button(
-                        onClick = { onEvent(TimeTrackingEvent.StopTracking) },
+                        onClick = { onEvent(StopTracking) },
                         enabled = state.currentWorkTime.hasStart(),
                         content = { Text(text = "Stop") }
                     )
 
                     Button(
-                        onClick = { onEvent(TimeTrackingEvent.DeleteTrackedTimes) },
-                        enabled = state.workTimes.isNotEmpty(),
+                        onClick = { onEvent(DeleteWorkTimes(workTimesToDisplay)) },
+                        enabled = workTimesToDisplay.isNotEmpty(),
                         content = { Text(text = "Clear") }
                     )
 
@@ -153,7 +215,8 @@ fun TimeTrackingScreen(
                     WorkTimeCard(
                         workTime = state.currentWorkTime,
                         elevation = CardDefaults.outlinedCardElevation(),
-                        border = BorderStroke(width = 4.dp, color = colorScheme.secondary)
+                        border = BorderStroke(width = 4.dp, color = colorScheme.secondary),
+                        onDeleteClick = { onEvent(DeleteWorkTime(it)) }
                     )
                 }
 
@@ -193,7 +256,10 @@ fun TimeTrackingScreen(
                         Box(
                             modifier = Modifier.padding(horizontal = 16.dp)
                         ) {
-                            WorkTimeCard(workTime = it)
+                            WorkTimeCard(
+                                workTime = it,
+                                onDeleteClick = { onEvent(DeleteWorkTime(it)) }
+                            )
                         }
                     }
 
