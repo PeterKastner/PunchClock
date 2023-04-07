@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import com.maxkeppeker.sheets.core.models.base.Header
 import com.maxkeppeker.sheets.core.models.base.IconSource
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.duration.DurationDialog
 import com.maxkeppeler.sheets.duration.models.DurationConfig
 import com.maxkeppeler.sheets.duration.models.DurationFormat
 import com.maxkeppeler.sheets.duration.models.DurationSelection
@@ -14,7 +15,7 @@ import java.time.Duration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DurationDialog(
+fun PauseDialog(
     duration: Duration,
     closeSelection: () -> Unit,
     onSubmit: (newDuration: Duration) -> Unit
@@ -25,7 +26,7 @@ fun DurationDialog(
         onCloseRequest = { closeSelection() }
     )
 
-    com.maxkeppeler.sheets.duration.DurationDialog(
+    DurationDialog(
         state = useCaseState,
         header = Header.Default(
             title = "Input your break time",

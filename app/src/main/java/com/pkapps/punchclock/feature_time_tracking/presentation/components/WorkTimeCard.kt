@@ -77,7 +77,7 @@ fun WorkTimeCard(
     var showDurationDialog by remember { mutableStateOf(false) }
 
     if (showDurationDialog) {
-        DurationDialog(
+        PauseDialog(
             duration = workTime.pause,
             closeSelection = { showDurationDialog = false },
             onSubmit = onPauseSubmit
