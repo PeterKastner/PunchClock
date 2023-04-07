@@ -217,7 +217,7 @@ fun TimeTrackingScreen(
                         elevation = CardDefaults.outlinedCardElevation(),
                         border = BorderStroke(width = 4.dp, color = colorScheme.secondary),
                         onDeleteClick = { onEvent(DeleteWorkTime(it)) },
-                        onCommentTextChangeSubmit = { newComment ->
+                        onCommentSubmit = { newComment ->
                             Timber.i("onCommentTextChangeSubmit: comment = '$newComment'")
                             onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(comment = newComment)))
                         }
@@ -263,9 +263,9 @@ fun TimeTrackingScreen(
                             WorkTimeCard(
                                 workTime = it,
                                 onDeleteClick = { onEvent(DeleteWorkTime(it)) },
-                                onCommentTextChangeSubmit = { newComment ->
+                                onCommentSubmit = { newComment ->
                                     Timber.i("onCommentTextChangeSubmit: comment = '$newComment'")
-                                    onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(comment = newComment)))
+                                    onEvent(UpdateWorkTime(workTime = it.copy(comment = newComment)))
                                 }
                             )
                         }

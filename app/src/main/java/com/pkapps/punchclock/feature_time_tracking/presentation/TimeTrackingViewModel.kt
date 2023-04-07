@@ -69,7 +69,7 @@ class TimeTrackingViewModel @Inject constructor(
     private fun updateWorkTime(workTime: WorkTime) = viewModelScope.launch {
         workTimeRepository.upsertWorkTime(workTime)
 
-        if (workTime == _state.value.currentWorkTime) _state.update { it.copy(currentWorkTime = workTime) }
+        if (workTime.id == _state.value.currentWorkTime.id) _state.update { it.copy(currentWorkTime = workTime) }
     }
 
     private fun deleteWorkTime(workTime: WorkTime) = viewModelScope.launch {

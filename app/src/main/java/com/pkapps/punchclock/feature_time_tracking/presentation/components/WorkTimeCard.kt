@@ -50,7 +50,7 @@ fun WorkTimeCard(
     border: BorderStroke? = null,
     //onClick: (WorkTime) -> Unit = { },
     onDeleteClick: (WorkTime) -> Unit = { },
-    onCommentTextChangeSubmit: (String) -> Unit = { }
+    onCommentSubmit: (String) -> Unit = { }
 ) {
 
     val showNetDelta = remember { workTime.netDeltaOrNull() != null }
@@ -61,7 +61,7 @@ fun WorkTimeCard(
         CommentDialog(
             text = workTime.comment,
             closeSelection = { showCommentDialog = false },
-            onSubmit = onCommentTextChangeSubmit
+            onSubmit = onCommentSubmit
         )
     }
 
