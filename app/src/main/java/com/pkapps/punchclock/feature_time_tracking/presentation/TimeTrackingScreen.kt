@@ -274,6 +274,14 @@ fun TimeTrackingScreen(
                                 onPauseSubmit = { newDuration ->
                                     Timber.i("duration = '$newDuration'")
                                     onEvent(UpdateWorkTime(workTime = it.copy(pause = newDuration)))
+                                },
+                                onStartTimeSubmit = { newStartTime ->
+                                    Timber.i("start time = '$newStartTime'")
+                                    onEvent(UpdateWorkTime(workTime = it.copy(start = it.start?.with(newStartTime))))
+                                },
+                                onEndTimeSubmit = { newEndTime ->
+                                    Timber.i("end time = '$newEndTime'")
+                                    onEvent(UpdateWorkTime(workTime = it.copy(end = it.end?.with(newEndTime))))
                                 }
                             )
                         }

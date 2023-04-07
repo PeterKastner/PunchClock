@@ -36,7 +36,9 @@ import com.pkapps.punchclock.feature_time_tracking.data.local.WorkTime
 import de.charlex.compose.*
 import kotlinx.coroutines.launch
 import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -50,8 +52,12 @@ fun WorkTimeCard(
     border: BorderStroke? = null,
     //onClick: (WorkTime) -> Unit = { },
     onDeleteClick: (WorkTime) -> Unit = { },
-    onCommentSubmit: (String) -> Unit = { },
-    onPauseSubmit: (Duration) -> Unit = { },
+    onCommentSubmit: (comment: String) -> Unit = { },
+    onPauseSubmit: (pause: Duration) -> Unit = { },
+    onStartTimeSubmit: (start: LocalTime) -> Unit = { },
+    onEndTimeSubmit: (end: LocalTime) -> Unit = { },
+    onStartDateSubmit: (start: LocalDate) -> Unit = { },
+    onEndDateSubmit: (end: LocalDate) -> Unit = { }
 ) {
 
     val showNetDelta = remember { workTime.netDeltaOrNull() != null }
@@ -73,6 +79,26 @@ fun WorkTimeCard(
             duration = workTime.pause,
             closeSelection = { showDurationDialog = false },
             onSubmit = onPauseSubmit
+        )
+    }
+
+    var showInputStartTimeDialog by remember { mutableStateOf(false) }
+
+    if (showInputStartTimeDialog && workTime.hasStart()) {
+        TimeDialog(
+            localTime = workTime.start!!.toLocalTime(),
+            close = { showInputStartTimeDialog = false },
+            onSubmit = onStartTimeSubmit
+        )
+    }
+
+    var showInputEndTimeDialog by remember { mutableStateOf(false) }
+
+    if (showInputEndTimeDialog && workTime.hasEnd()) {
+        TimeDialog(
+            localTime = workTime.end!!.toLocalTime(),
+            close = { showInputEndTimeDialog = false },
+            onSubmit = onEndTimeSubmit
         )
     }
 
@@ -152,11 +178,19 @@ fun WorkTimeCard(
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .fillMaxWidth()
             ) {
+                // start
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = modifier
                         .padding(vertical = 8.dp)
                         .fillMaxWidth()
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onLongPress = {
+                                    showInputStartTimeDialog = true
+                                }
+                            )
+                        }
                 ) {
 
                     Text(
@@ -172,11 +206,19 @@ fun WorkTimeCard(
                         overflow = TextOverflow.Ellipsis,
                     )
                 }
+                // end
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = modifier
                         .padding(vertical = 8.dp)
                         .fillMaxWidth()
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onLongPress = {
+                                    showInputEndTimeDialog = true
+                                }
+                            )
+                        }
                 ) {
 
                     Text(
@@ -191,6 +233,7 @@ fun WorkTimeCard(
                     )
                 }
 
+                // pause duration
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = modifier
@@ -215,6 +258,7 @@ fun WorkTimeCard(
                     )
                 }
 
+                // net time delta
                 if (showNetDelta) {
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -243,6 +287,7 @@ fun WorkTimeCard(
                     }
                 }
 
+                // comment
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = modifier
