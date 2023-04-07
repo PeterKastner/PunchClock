@@ -14,7 +14,7 @@ import com.maxkeppeler.sheets.input.models.*
 fun CommentDialog(
     text: String = "",
     closeSelection: () -> Unit,
-    onSubmit: (String) -> Unit
+    onSubmit: (newComment: String) -> Unit
 ) {
 
     val inputOptions = listOf(
