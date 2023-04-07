@@ -262,7 +262,11 @@ fun TimeTrackingScreen(
                         ) {
                             WorkTimeCard(
                                 workTime = it,
-                                onDeleteClick = { onEvent(DeleteWorkTime(it)) }
+                                onDeleteClick = { onEvent(DeleteWorkTime(it)) },
+                                onCommentTextChangeSubmit = { newComment ->
+                                    Timber.i("onCommentTextChangeSubmit: comment = '$newComment'")
+                                    onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(comment = newComment)))
+                                }
                             )
                         }
                     }
