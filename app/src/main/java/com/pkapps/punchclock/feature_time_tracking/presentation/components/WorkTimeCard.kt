@@ -53,14 +53,11 @@ fun WorkTimeCard(
     onDeleteClick: (WorkTime) -> Unit = { },
 ) {
 
-    val showGrossDelta = remember { workTime.grossDeltaOrNull() != null }
-    val showPause = remember { workTime.pause > Duration.ZERO }
     val showNetDelta = remember { workTime.netDeltaOrNull() != null }
-
 
     val hapticFeedback = LocalHapticFeedback.current
     fun performHapticFeedback() =
-        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+        hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
 
     val revealState = rememberRevealState(
         confirmStateChange = {
@@ -173,42 +170,21 @@ fun WorkTimeCard(
                     )
                 }
 
-                if (showGrossDelta) {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = modifier
-                            .padding(vertical = 8.dp)
-                            .fillMaxWidth()
-                    ) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = modifier
+                        .padding(vertical = 8.dp)
+                        .fillMaxWidth()
+                ) {
 
-                        Text(
-                            text = "Gross",
-                            style = style
-                        )
-                        Text(
-                            text = workTime.grossDeltaOrNull()?.inHoursMinutes() ?: "",
-                            style = style
-                        )
-                    }
-                }
-
-                if (showPause) {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = modifier
-                            .padding(vertical = 8.dp)
-                            .fillMaxWidth()
-                    ) {
-
-                        Text(
-                            text = "Pause",
-                            style = style
-                        )
-                        Text(
-                            text = workTime.pause.inHoursMinutes(),
-                            style = style
-                        )
-                    }
+                    Text(
+                        text = "Pause",
+                        style = style
+                    )
+                    Text(
+                        text = workTime.pause.inHoursMinutes(),
+                        style = style
+                    )
                 }
 
                 if (showNetDelta) {
@@ -228,7 +204,7 @@ fun WorkTimeCard(
                         }
 
                         Text(
-                            text = "Net",
+                            text = "Delta",
                             style = style
                         )
                         Text(
