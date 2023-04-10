@@ -1,4 +1,4 @@
-package com.pkapps.punchclock.feature_time_tracking.presentation.components
+package com.pkapps.punchclock.feature_time_tracking.presentation.components.dialogs
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable

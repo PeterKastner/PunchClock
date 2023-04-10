@@ -1,4 +1,4 @@
-package com.pkapps.punchclock.feature_time_tracking.presentation.components
+package com.pkapps.punchclock.feature_time_tracking.presentation.components.dialogs
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notes
