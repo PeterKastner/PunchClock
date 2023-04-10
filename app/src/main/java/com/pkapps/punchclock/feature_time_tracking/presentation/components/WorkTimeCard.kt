@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -25,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -33,9 +33,8 @@ import androidx.compose.ui.unit.dp
 import com.pkapps.punchclock.R
 import com.pkapps.punchclock.core.ui.theme.PunchClockTheme
 import com.pkapps.punchclock.core.util.inHoursMinutes
-import com.pkapps.punchclock.core.util.toReadableTimeAsString
 import com.pkapps.punchclock.feature_time_tracking.data.local.WorkTime
-import com.pkapps.punchclock.feature_time_tracking.presentation.components.cards.DateTimeCard
+import com.pkapps.punchclock.feature_time_tracking.presentation.components.cards.DateTimeItem
 import de.charlex.compose.*
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -197,12 +196,13 @@ fun WorkTimeCard(
             )
 
             Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = modifier
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .fillMaxWidth()
             ) {
                 // start
-                DateTimeCard(
+                DateTimeItem(
                     title = "Start",
                     localDateTime = workTime.start,
                     onDateClick = { showStartDateDialog = true },
@@ -210,96 +210,51 @@ fun WorkTimeCard(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth()
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onLongPress = {
-                                    showStartTimeDialog = true
-                                    showStartDateDialog = true
-                                }
-                            )
-                        }
-                ) {
-
-                    Text(
-                        text = "Start",
-                        style = style,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Text(
-                        text = workTime.start?.toReadableTimeAsString() ?: "",
-                        style = style,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-
-
-                }
                 // end
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth()
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onLongPress = {
-                                    showEndTimeDialog = true
-                                    showEndDateDialog = true
-                                }
-                            )
-                        }
-                ) {
-
-                    Text(
-                        text = "End",
-                        style = style,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Text(
-                        text = workTime.end?.toReadableTimeAsString() ?: "",
-                        style = style
-                    )
-                }
+                DateTimeItem(
+                    title = "End",
+                    localDateTime = workTime.end,
+                    onDateClick = { showEndDateDialog = true },
+                    onTimeClick = { showEndTimeDialog = true },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
                 // pause duration
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth()
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onLongPress = {
-                                    showDurationDialog = true
-                                }
-                            )
-                        }
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = modifier.fillMaxWidth()
                 ) {
 
                     Text(
                         text = "Pause",
                         style = style
                     )
-                    Text(
-                        text = workTime.pause.inHoursMinutes(),
-                        style = style
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        OutlinedButton(
+                            shape = shapes.small,
+                            onClick = {
+                                performHapticFeedback()
+                                showDurationDialog = true
+                            },
+                        ) {
+                            Text(
+                                text = workTime.pause.inHoursMinutes(),
+                                style = style
+                            )
+                        }
+                    }
                 }
 
                 // net time delta
                 if (showNetDelta) {
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = modifier
-                            .padding(vertical = 8.dp)
-                            .fillMaxWidth()
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = modifier.fillMaxWidth()
                     ) {
 
                         val color = workTime.netDeltaOrNull()?.let {
@@ -314,11 +269,26 @@ fun WorkTimeCard(
                             text = "Delta",
                             style = style
                         )
-                        Text(
-                            text = workTime.netDeltaOrNull()?.inHoursMinutes() ?: "",
-                            style = style,
-                            color = color ?: Color.Unspecified
-                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            OutlinedButton(
+                                shape = shapes.small,
+                                onClick = {
+                                    performHapticFeedback()
+                                    showDurationDialog = true
+                                },
+                                border = null,
+                                enabled = false,
+                            ) {
+                                Text(
+                                    text = workTime.netDeltaOrNull()?.inHoursMinutes() ?: "",
+                                    style = style,
+                                    color = color ?: Color.Unspecified
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -326,8 +296,8 @@ fun WorkTimeCard(
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = modifier
-                        .padding(vertical = 8.dp)
                         .fillMaxWidth()
+                        .padding(bottom = 8.dp)
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onLongPress = {
