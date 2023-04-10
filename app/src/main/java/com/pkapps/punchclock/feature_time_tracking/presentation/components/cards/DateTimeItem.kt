@@ -1,7 +1,6 @@
 package com.pkapps.punchclock.feature_time_tracking.presentation.components.cards
 
 import android.content.res.Configuration
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.shapes
@@ -9,9 +8,7 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -27,26 +24,23 @@ import java.time.format.FormatStyle
 import java.util.*
 
 @Composable
-fun DateTimeCard(
+fun DateTimeItem(
     title: String,
     modifier: Modifier = Modifier,
-    headerStyle: TextStyle = typography.titleMedium.copy(
+    textStyle: TextStyle = typography.titleLarge.copy(
         color = MaterialTheme.colorScheme.onSurface,
         fontWeight = FontWeight.Bold,
         fontStyle = FontStyle.Italic,
         textDecoration = TextDecoration.None
     ),
-    itemStyle: TextStyle = typography.titleLarge.copy(
+    dateAndTimeStyle: TextStyle = typography.titleLarge.copy(
         color = MaterialTheme.colorScheme.onSurface,
         fontWeight = FontWeight.Bold,
         fontStyle = FontStyle.Italic,
         textDecoration = TextDecoration.None
     ),
     localDateTime: LocalDateTime?,
-    shape: Shape = CardDefaults.elevatedShape,
-    colors: CardColors = CardDefaults.elevatedCardColors(),
-    elevation: CardElevation = CardDefaults.elevatedCardElevation(16.dp),
-    dateFormatStyle: FormatStyle = FormatStyle.MEDIUM,
+    dateFormatStyle: FormatStyle = FormatStyle.SHORT,
     timeFormatStyle: FormatStyle = FormatStyle.SHORT,
     locale: Locale = Locale.getDefault(),
     onDateClick: () -> Unit,
@@ -63,75 +57,56 @@ fun DateTimeCard(
     fun performHapticFeedback() =
         hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
 
-    ElevatedCard(
-        modifier = modifier.wrapContentSize(),
-        shape = shape,
-        colors = colors,
-        elevation = elevation
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.fillMaxWidth(),
     ) {
+        Text(
+            text = title,
+            style = textStyle,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            //modifier = Modifier.padding(top = 8.dp, start = 16.dp),
+        )
 
-        Column(
-            modifier = modifier.wrapContentWidth()
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-
-            Text(
-                text = title,
-                style = headerStyle,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(top = 8.dp, start = 16.dp),
-            )
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(horizontal = 16.dp),
+            OutlinedButton(
+                shape = shapes.small,
+                onClick = {
+                    performHapticFeedback()
+                    onDateClick()
+                },
+                contentPadding = ButtonDefaults.ContentPadding,
+                border = if (date == null) null else ButtonDefaults.outlinedButtonBorder
             ) {
-                OutlinedCard(
-                    shape = shapes.medium,
-                    modifier = Modifier
-                        //.padding(vertical = 8.dp)
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onLongPress = {
-                                    performHapticFeedback()
-                                    onDateClick()
-                                }
-                            )
-                        }
-                ) {
-                    Text(
-                        text = date?.format(dateFormat) ?: "",
-                        style = itemStyle,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(16.dp),
-                    )
-                }
-                OutlinedCard(
-                    shape = shapes.medium,
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onLongPress = {
-                                    performHapticFeedback()
-                                    onTimeClick()
-                                }
-                            )
-                        }
-                ) {
-                    Text(
-                        text = time?.format(timeFormat) ?: "",
-                        style = itemStyle,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(16.dp),
-                    )
-                }
+                Text(
+                    text = date?.format(dateFormat) ?: "",
+                    style = dateAndTimeStyle,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    //modifier = Modifier.padding(16.dp),
+                )
+            }
+            OutlinedButton(
+                shape = shapes.small,
+                onClick = {
+                    performHapticFeedback()
+                    onTimeClick()
+                },
+                border = if (time == null) null else ButtonDefaults.outlinedButtonBorder
+            ) {
+                Text(
+                    text = time?.format(timeFormat) ?: "",
+                    style = dateAndTimeStyle,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
         }
-
     }
 }
 
@@ -150,11 +125,11 @@ fun DateTimeCardPreview() {
                     .padding(innerPadding)
                     .padding(16.dp)
             ) {
-                DateTimeCard(
+                DateTimeItem(
                     modifier = Modifier.wrapContentWidth(),
                     title = "Start",
                     localDateTime = LocalDateTime.now(),
-                    dateFormatStyle = FormatStyle.LONG,
+                    dateFormatStyle = FormatStyle.SHORT,
                     locale = Locale.GERMAN,
                     onDateClick = {},
                     onTimeClick = {},
