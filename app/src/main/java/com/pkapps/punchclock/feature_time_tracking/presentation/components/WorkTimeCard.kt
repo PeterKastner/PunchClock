@@ -35,6 +35,10 @@ import com.pkapps.punchclock.core.ui.theme.PunchClockTheme
 import com.pkapps.punchclock.core.util.inHoursMinutes
 import com.pkapps.punchclock.feature_time_tracking.data.local.WorkTime
 import com.pkapps.punchclock.feature_time_tracking.presentation.components.cards.DateTimeItem
+import com.pkapps.punchclock.feature_time_tracking.presentation.components.dialogs.CommentDialog
+import com.pkapps.punchclock.feature_time_tracking.presentation.components.dialogs.DateDialog
+import com.pkapps.punchclock.feature_time_tracking.presentation.components.dialogs.PauseDialog
+import com.pkapps.punchclock.feature_time_tracking.presentation.components.dialogs.TimeDialog
 import de.charlex.compose.*
 import kotlinx.coroutines.launch
 import java.time.Duration
