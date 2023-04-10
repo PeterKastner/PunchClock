@@ -239,7 +239,7 @@ fun TimeTrackingScreen(
                         },
                         onEndDateSubmit = { newEndDate ->
                             Timber.i("end date = '$newEndDate'")
-                            onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(start = state.currentWorkTime.end?.with(newEndDate))))
+                            onEvent(UpdateWorkTime(workTime = state.currentWorkTime.copy(end = state.currentWorkTime.end?.with(newEndDate))))
                         }
                     )
                 }
