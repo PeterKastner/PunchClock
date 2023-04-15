@@ -53,8 +53,6 @@ fun TimeTrackingScreen(
             .sortedByDescending { it.end }
     }
 
-    val workTimesGroupedByStartDate = workTimesToDisplay.groupBy { it.start!!.toLocalDate() }
-
     val workTimesGroupedByCalendarWeek = workTimesToDisplay.groupBy {
 
         val weekFields = WeekFields.ISO
@@ -71,7 +69,6 @@ fun TimeTrackingScreen(
     val context = LocalContext.current
 
     val scope = rememberCoroutineScope()
-
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -257,7 +254,7 @@ fun TimeTrackingScreen(
                     HeaderItem(text = "Week $week\t\t${sumOfNetDeltas.inHoursMinutes()}")
                 }
 
-                workTimesGroupedByStartDate.forEach { (date, workTimes) ->
+                workTimes.groupBy { it.start!!.toLocalDate() }.forEach { (date, workTimes) ->
 
                     val fullStyleDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
 
